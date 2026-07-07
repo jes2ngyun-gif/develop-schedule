@@ -16,7 +16,7 @@ Spring Boot와 JPA를 활용한 일정 관리 API 프로젝트입니다.
 - Spring Boot
 - Spring Web
 - Spring Data JPA
-- H2 Database
+- My SQL
 - Lombok
 - Validation
 
