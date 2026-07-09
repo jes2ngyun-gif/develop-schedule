@@ -22,7 +22,8 @@ public class ScheduleController {
 
     // 일정 생성
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto requestDto) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(
+            @RequestBody ScheduleRequestDto requestDto) {
         ScheduleResponseDto responseDto = scheduleService.createSchedule(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
@@ -38,7 +39,9 @@ public class ScheduleController {
 
     // 일정 단건 조회
     @GetMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> getSchedule(@PathVariable Long id) {
+    public ResponseEntity<ScheduleResponseDto> getSchedule(
+            @PathVariable Long id
+    ) {
         ScheduleResponseDto responseDto = scheduleService.getSchedule(id);
 
         return ResponseEntity.ok(responseDto);
