@@ -64,6 +64,14 @@ public class UserService {
         return new UserResponseDto(user);
     }
 
+    // 유저 삭제
+    @Transactional
+    public void deleteUser(Long id) {
+        User user = findUser(id);
+
+        userRepository.delete(user);                      // 없는 아이디면 findUser(id)에서 예외 발생
+    }
+
     // id로 유저를 찾는 공통 메서트
     private User findUser(Long id) {
         return userRepository.findById(id)

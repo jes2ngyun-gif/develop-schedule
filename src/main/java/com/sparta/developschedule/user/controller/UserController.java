@@ -1,5 +1,6 @@
 package com.sparta.developschedule.user.controller;
 
+import com.sparta.developschedule.common.dto.MessageResponseDto;
 import com.sparta.developschedule.user.dto.UserSaveRequestDto;
 import com.sparta.developschedule.user.dto.UserResponseDto;
 import com.sparta.developschedule.user.dto.UserUpdateRequestDto;
@@ -58,4 +59,17 @@ public class UserController {
 
         return ResponseEntity.ok(responseDto);
     }
+
+    // 유저 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponseDto> deleteUser(
+            @PathVariable Long id
+    ) {
+        userService.deleteUser(id);
+
+        MessageResponseDto responseDto = new MessageResponseDto("유저가 삭제되었습니다.");
+
+        return ResponseEntity.ok(responseDto);
+    }
 }
+
