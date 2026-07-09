@@ -5,6 +5,7 @@ import com.sparta.developschedule.user.dto.UserSaveRequestDto;
 import com.sparta.developschedule.user.dto.UserResponseDto;
 import com.sparta.developschedule.user.dto.UserUpdateRequestDto;
 import com.sparta.developschedule.user.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class UserController {
     // 유저 생성
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDto> createUser(
-            @RequestBody UserSaveRequestDto requestDto
+            @Valid @RequestBody UserSaveRequestDto requestDto                  // @Valid 로 요청 DTO 검증
     ) {
         UserResponseDto responseDto = userService.createUser(requestDto);
 

@@ -23,9 +23,11 @@ public class UserService {
     // 유저 생성
     @Transactional
     public UserResponseDto createUser(UserSaveRequestDto requestDto) {
+
         User user = new User(
                 requestDto.getUsername(),
-                requestDto.getEmail()
+                requestDto.getEmail(),
+                requestDto.getPassword()
         );
         User savedUser = userRepository.save(user);
 

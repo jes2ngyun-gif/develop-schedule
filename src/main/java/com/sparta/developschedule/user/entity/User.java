@@ -22,10 +22,14 @@ public class User extends BaseEntity  {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     // 직접 만든 생성자 ( 회원가입할 때 사용할 생성자 )
-    public User(String username, String email) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
+        this.password = password;
     }
 
     // 수정 메서드
