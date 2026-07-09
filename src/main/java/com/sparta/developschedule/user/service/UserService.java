@@ -1,5 +1,6 @@
 package com.sparta.developschedule.user.service;
 
+import com.sparta.developschedule.common.exception.NotFoundException;
 import com.sparta.developschedule.user.dto.UserSaveRequestDto;
 import com.sparta.developschedule.user.dto.UserResponseDto;
 import com.sparta.developschedule.user.entity.User;
@@ -40,5 +41,19 @@ public class UserService {
             responseDtoList.add(new UserResponseDto(user));
         }
         return responseDtoList;
+    }
+
+    // 유저 단건 조회
+    @Transactional(readOnly = true)
+    public UserResponseDto getUser(Long id) {
+        User user = findUser(id);
+
+        return new UserResponseDto(user);
+    }
+
+    // id로 유저를 찾는 공통 메서트
+    private User findUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다. id: " + id));
     }
 }

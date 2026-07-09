@@ -29,9 +29,21 @@ public class UserController {
 
     // 유저 전체 조회
     @GetMapping
-    public ResponseEntity<List<UserResponseDto>> getUsers() {
+    public ResponseEntity<List<UserResponseDto>> getUsers(
+
+    ) {
         List<UserResponseDto> responseDtoList = userService.getUsers();
 
         return ResponseEntity.ok(responseDtoList);
+    }
+
+    // 유저 단건 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUser(
+            @PathVariable Long id
+    ) {
+        UserResponseDto responseDto = userService.getUser(id);
+
+        return ResponseEntity.ok(responseDto);
     }
 }

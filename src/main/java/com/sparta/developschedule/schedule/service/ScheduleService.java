@@ -8,6 +8,7 @@ import com.sparta.developschedule.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.sparta.developschedule.common.exception.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +76,7 @@ public class ScheduleService {
     // id로 일정 찾는 공통 메서드
     private Schedule findSchedule(Long id) {
         return scheduleRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("일정을 찾을 수 없습니다."));       // private -> 이 메서드를 스케줄서비스 내부에서만 사용하려고
+                .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다. id: " + id));       // private -> 이 메서드를 스케줄서비스 내부에서만 사용하려고
     }
 }
 
