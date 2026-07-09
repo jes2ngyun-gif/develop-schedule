@@ -5,6 +5,8 @@ import com.sparta.developschedule.schedule.dto.ScheduleResponseDto;
 import com.sparta.developschedule.schedule.dto.UpdateScheduleRequestDto;
 import com.sparta.developschedule.schedule.entity.Schedule;
 import com.sparta.developschedule.schedule.repository.ScheduleRepository;
+import com.sparta.developschedule.user.entity.User;
+import com.sparta.developschedule.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +22,15 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;                          // ScheduleService가 DB 작업을 하려면 ScheduleRepository가 필요
 
+    private final UserRepository userRepository;
+
     // 일정 생성 기능
     @Transactional
     public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
+
+        User user = findUser(requestDto.getUserId());
         Schedule schedule = new Schedule(
-                requestDto.getUsername(),
+                user,
                 requestDto.getTitle(),
                 requestDto.getContents()
         );
@@ -33,6 +39,7 @@ public class ScheduleService {
 
         return new ScheduleResponseDto(savedSchedule);
     }
+
 
     // 일정 전체 조회 기능
     @Transactional(readOnly = true)
@@ -79,6 +86,12 @@ public class ScheduleService {
     private Schedule findSchedule(Long id) {
         return scheduleRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("일정을 찾을 수 없습니다. id: " + id));       // private -> 이 메서드를 스케줄서비스 내부에서만 사용하려고
+    }
+
+    // id로 유저 찾는 공통 메서드
+    private User findUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다. id: " + id));
     }
 }
 

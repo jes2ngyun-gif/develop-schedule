@@ -46,6 +46,7 @@ Spring Boot와 JPA를 활용한 일정 관리 API 프로젝트입니다.
 Request
 ```json
 {
+  "userId": 3
   "title": "할일 제목",
   "contents": "할일 내용"
 }
@@ -55,6 +56,7 @@ Response
 ```json
 {
   "id": 1,
+  "userId": 3,
   "username": "jeongyun",
   "title": "할일 제목",
   "contents": "할일 내용",
@@ -70,6 +72,7 @@ Response
 [
   {
     "id": 1,
+    "userId": 3,
     "username": "jeongyun",
     "title": "할일 제목",
     "contents": "할일 내용",
@@ -85,6 +88,7 @@ Response
 ```json
 {
   "id": 1,
+  "userId": 3,
   "username": "jeongyun",
   "title": "할일 제목",
   "contents": "할일 내용",
@@ -107,6 +111,7 @@ Response
 ```json
 {
   "id": 1,
+  "userId": 3,
   "username": "jeongyun",
   "title": "수정된 제목",
   "contents": "수정된 내용",

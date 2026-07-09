@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ScheduleRequestDto {                   // 일정 생성 요청에서 사용할거임.
 
-    private String username;
+    private Long userId;
     private String title;
     private String contents;
 }
