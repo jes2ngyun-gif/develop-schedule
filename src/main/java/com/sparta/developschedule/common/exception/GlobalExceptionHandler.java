@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {                                                // NotFoundException이 발생하면 HTTP 404 Not Found상태코드와 메세지 응답을 내려줌.
 
-    // 기존 : 404 처리
+    // 기존 : 404 처리 --> 조회 대상이 없을 때 404 Not Found 응답
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<MessageResponseDto> handleNotFound(NotFoundException e) {
         MessageResponseDto responseDto = new MessageResponseDto(e.getMessage());
@@ -28,5 +28,13 @@ public class GlobalExceptionHandler {                                           
 
         MessageResponseDto responseDto = new MessageResponseDto(message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseDto);
+    }
+
+    // 401 처리 --> 로그인 인증 실패 시 401 Unauthorized 응답
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<MessageResponseDto> handleUnauthorized(UnauthorizedException e) {
+        MessageResponseDto responseDto = new MessageResponseDto(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDto);
     }
 }
