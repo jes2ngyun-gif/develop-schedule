@@ -3,6 +3,7 @@ package com.sparta.developschedule.user.service;
 import com.sparta.developschedule.common.exception.NotFoundException;
 import com.sparta.developschedule.user.dto.UserSaveRequestDto;
 import com.sparta.developschedule.user.dto.UserResponseDto;
+import com.sparta.developschedule.user.dto.UserUpdateRequestDto;
 import com.sparta.developschedule.user.entity.User;
 import com.sparta.developschedule.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,18 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto getUser(Long id) {
         User user = findUser(id);
+
+        return new UserResponseDto(user);
+    }
+
+    // 유저 수정
+    @Transactional
+    public UserResponseDto updateUser(Long id, UserUpdateRequestDto requestDto) {
+        User user = findUser(id);
+
+        user.update(requestDto.getUsername(), requestDto.getEmail());               // 실제 수정은 Entity 의 update() 메서드로 처리함
+
+        userRepository.flush();                                                      // .flush() -> 최신 modifiedAt 으로 반영됌
 
         return new UserResponseDto(user);
     }

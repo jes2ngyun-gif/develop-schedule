@@ -62,6 +62,8 @@ public class ScheduleService {
 
         schedule.update(requestDto.getTitle(), requestDto.getContents());
 
+        scheduleRepository.flush();
+
         return new ScheduleResponseDto(schedule);
     }
 

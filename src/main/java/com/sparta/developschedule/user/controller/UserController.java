@@ -2,6 +2,7 @@ package com.sparta.developschedule.user.controller;
 
 import com.sparta.developschedule.user.dto.UserSaveRequestDto;
 import com.sparta.developschedule.user.dto.UserResponseDto;
+import com.sparta.developschedule.user.dto.UserUpdateRequestDto;
 import com.sparta.developschedule.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -43,6 +44,17 @@ public class UserController {
             @PathVariable Long id
     ) {
         UserResponseDto responseDto = userService.getUser(id);
+
+        return ResponseEntity.ok(responseDto);
+    }
+
+    // 유저 수정
+    @PatchMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserUpdateRequestDto requestDto
+    ) {
+        UserResponseDto responseDto = userService.updateUser(id, requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
