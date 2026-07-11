@@ -26,9 +26,10 @@ public class ScheduleService {
 
     // 일정 생성 기능
     @Transactional
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto requestDto) {
+    public ScheduleResponseDto createSchedule(Long loginUserId, ScheduleRequestDto requestDto) {
 
-        User user = findUser(requestDto.getUserId());
+        User user = findUser(loginUserId);                                        // 작성자 = 세션에 저장된 로그인 유저 id
+                                                                                  // 이제 클라이언트가 작성자를 조작할 수 없음.
         Schedule schedule = new Schedule(
                 user,
                 requestDto.getTitle(),

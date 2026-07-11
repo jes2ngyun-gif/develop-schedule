@@ -5,6 +5,8 @@ import com.sparta.developschedule.schedule.dto.ScheduleRequestDto;
 import com.sparta.developschedule.schedule.dto.ScheduleResponseDto;
 import com.sparta.developschedule.schedule.dto.UpdateScheduleRequestDto;
 import com.sparta.developschedule.schedule.service.ScheduleService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,11 +25,16 @@ public class ScheduleController {
     // 일정 생성
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(
-            @RequestBody ScheduleRequestDto requestDto) {
-        ScheduleResponseDto responseDto = scheduleService.createSchedule(requestDto);
+            @Valid @RequestBody ScheduleRequestDto requestDto,
+        HttpSession session
+    ) {
+        Long loginUserId = (Long) session.getAttribute("loginUserId");         // 로그인할 때 세션에 저장한 값
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        ScheduleResponseDto responseDto = scheduleService.createSchedule(loginUserId, requestDto);    // 일정 작성자는 ("loginUserId", userId) 로 결정됌.
+
+        return ResponseEntity.status(HttpStatus. CREATED).body(responseDto);
     }
+
 
     // 일정 전체 조회
     @GetMapping
