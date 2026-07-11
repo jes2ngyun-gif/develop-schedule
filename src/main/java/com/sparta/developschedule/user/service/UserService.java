@@ -7,6 +7,8 @@ import com.sparta.developschedule.user.dto.UserUpdateRequestDto;
 import com.sparta.developschedule.user.entity.User;
 import com.sparta.developschedule.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +20,20 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
 
     // 유저 생성
     @Transactional
     public UserResponseDto createUser(UserSaveRequestDto requestDto) {
+        String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
         User user = new User(
                 requestDto.getUsername(),
                 requestDto.getEmail(),
-                requestDto.getPassword()
+                encodedPassword
         );
+
         User savedUser = userRepository.save(user);
 
         return new UserResponseDto(savedUser);
