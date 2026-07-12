@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {                                           
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseDto);
     }
 
-    // 추가 : Validation 실패 400 처리
+    // @Valid 검증 실패 시 --> 400 Bad Request 응답
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<MessageResponseDto> handleValidationException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult()
@@ -36,5 +36,13 @@ public class GlobalExceptionHandler {                                           
         MessageResponseDto responseDto = new MessageResponseDto(e.getMessage());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseDto);
+    }
+
+    // 권한이 없는 사용자가 수정/삭제하려고 할 때 --> 403 Forbidden 응답
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<MessageResponseDto> handleForbidden(ForbiddenException e) {
+        MessageResponseDto responseDto = new MessageResponseDto(e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(responseDto);
     }
 }

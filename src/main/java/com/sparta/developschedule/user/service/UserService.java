@@ -1,5 +1,6 @@
 package com.sparta.developschedule.user.service;
 
+import com.sparta.developschedule.common.exception.ForbiddenException;
 import com.sparta.developschedule.common.exception.NotFoundException;
 import com.sparta.developschedule.user.dto.UserSaveRequestDto;
 import com.sparta.developschedule.user.dto.UserResponseDto;
@@ -61,7 +62,9 @@ public class UserService {
 
     // 유저 수정
     @Transactional
-    public UserResponseDto updateUser(Long id, UserUpdateRequestDto requestDto) {
+    public UserResponseDto updateUser(Long loginUserId, Long id, UserUpdateRequestDto requestDto) {
+        checkOwner(loginUserId, id);
+
         User user = findUser(id);
 
         user.update(requestDto.getUsername(), requestDto.getEmail());               // 실제 수정은 Entity 의 update() 메서드로 처리함
@@ -73,11 +76,22 @@ public class UserService {
 
     // 유저 삭제
     @Transactional
-    public void deleteUser(Long id) {
+    public void deleteUser(Long loginUserId, Long id) {
+        checkOwner(loginUserId, id);
+
         User user = findUser(id);
 
         userRepository.delete(user);                      // 없는 아이디면 findUser(id)에서 예외 발생
     }
+
+    // 로그인한 유저와 요청 대상 유저가 같은지 확인
+    private void checkOwner(Long loginUserId, Long targetUserId) {
+        if (!loginUserId.equals(targetUserId)) {
+            throw new ForbiddenException("본인만 수정/삭제할 수 있습니다.");
+        }
+    }
+
+
 
     // id로 유저를 찾는 공통 메서트
     private User findUser(Long id) {
@@ -85,3 +99,4 @@ public class UserService {
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다. id: " + id));
     }
 }
+

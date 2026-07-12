@@ -5,6 +5,7 @@ import com.sparta.developschedule.user.dto.UserSaveRequestDto;
 import com.sparta.developschedule.user.dto.UserResponseDto;
 import com.sparta.developschedule.user.dto.UserUpdateRequestDto;
 import com.sparta.developschedule.user.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -54,9 +55,12 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @RequestBody UserUpdateRequestDto requestDto
+            @RequestBody UserUpdateRequestDto requestDto,
+            HttpSession session
     ) {
-        UserResponseDto responseDto = userService.updateUser(id, requestDto);
+        Long loginUserId = (Long) session.getAttribute("loginUserId");
+
+        UserResponseDto responseDto = userService.updateUser(loginUserId, id, requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
@@ -64,9 +68,12 @@ public class UserController {
     // 유저 삭제
     @DeleteMapping("/{id}")
     public ResponseEntity<MessageResponseDto> deleteUser(
-            @PathVariable Long id
+            @PathVariable Long id,
+            HttpSession session
     ) {
-        userService.deleteUser(id);
+        Long loginUserId = (Long) session.getAttribute("loginUserId");
+
+        userService.deleteUser(loginUserId, id);
 
         MessageResponseDto responseDto = new MessageResponseDto("유저가 삭제되었습니다.");
 
