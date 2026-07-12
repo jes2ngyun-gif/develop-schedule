@@ -58,17 +58,25 @@ public class ScheduleController {
     @PatchMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
-            @RequestBody UpdateScheduleRequestDto requestDto
+            @RequestBody UpdateScheduleRequestDto requestDto,
+            HttpSession session
     ) {
-        ScheduleResponseDto responseDto = scheduleService.updateSchedule(id, requestDto);
+        Long loginUserId = (Long) session.getAttribute("loginUserId");
+
+        ScheduleResponseDto responseDto = scheduleService.updateSchedule(id, loginUserId, requestDto);
 
         return ResponseEntity.ok(responseDto);
     }
 
     // 일정 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<MessageResponseDto> deleteSchedule(@PathVariable Long id) {
-        scheduleService.deleteSchedule(id);
+    public ResponseEntity<MessageResponseDto> deleteSchedule(
+            @PathVariable Long id,
+            HttpSession session
+    ) {
+        Long loginUserId = (Long) session.getAttribute("loginUserId");
+
+        scheduleService.deleteSchedule(id, loginUserId);
 
         MessageResponseDto responseDto = new MessageResponseDto("일정이 삭제되었습니다.");
 

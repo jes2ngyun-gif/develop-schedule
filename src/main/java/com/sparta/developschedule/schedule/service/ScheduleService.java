@@ -1,5 +1,6 @@
 package com.sparta.developschedule.schedule.service;
 
+import com.sparta.developschedule.common.exception.ForbiddenException;
 import com.sparta.developschedule.schedule.dto.ScheduleRequestDto;
 import com.sparta.developschedule.schedule.dto.ScheduleResponseDto;
 import com.sparta.developschedule.schedule.dto.UpdateScheduleRequestDto;
@@ -29,7 +30,7 @@ public class ScheduleService {
     public ScheduleResponseDto createSchedule(Long loginUserId, ScheduleRequestDto requestDto) {
 
         User user = findUser(loginUserId);                                        // 작성자 = 세션에 저장된 로그인 유저 id
-                                                                                  // 이제 클라이언트가 작성자를 조작할 수 없음.
+        // 이제 클라이언트가 작성자를 조작할 수 없음.
         Schedule schedule = new Schedule(
                 user,
                 requestDto.getTitle(),
@@ -65,8 +66,10 @@ public class ScheduleService {
 
     // 일정 수정 기능
     @Transactional
-    public ScheduleResponseDto updateSchedule(Long id, UpdateScheduleRequestDto requestDto) {
+    public ScheduleResponseDto updateSchedule(Long id, Long loginUserId, UpdateScheduleRequestDto requestDto) {
         Schedule schedule = findSchedule(id);
+
+        checkOwner(schedule, loginUserId);                        // 작성자 본인인지 확인!
 
         schedule.update(requestDto.getTitle(), requestDto.getContents());
 
@@ -77,8 +80,10 @@ public class ScheduleService {
 
     // 일정 삭제 기능
     @Transactional
-    public void deleteSchedule(Long id) {                                                // void -> 삭제 후에 Service가 돌려줄 데이터 없기 때문.
+    public void deleteSchedule(Long id, Long loginUserId) {                                                // void -> 삭제 후에 Service가 돌려줄 데이터 없기 때문.
         Schedule schedule = findSchedule(id);
+
+        checkOwner(schedule, loginUserId);
 
         scheduleRepository.delete(schedule);
     }
@@ -93,6 +98,13 @@ public class ScheduleService {
     private User findUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("유저를 찾을 수 없습니다. id: " + id));
+    }
+
+    // 로그인한 유저가 일정의 작성자인지 확인
+    private void checkOwner(Schedule schedule, Long loginUserId) {
+        if (!schedule.getUser().getId().equals(loginUserId)) {
+            throw new ForbiddenException("본인이 작성한 일정만 수정/삭제할 수 있습니다.");
+        }
     }
 }
 
